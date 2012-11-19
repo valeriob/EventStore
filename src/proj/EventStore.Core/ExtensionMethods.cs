@@ -26,12 +26,22 @@ namespace EventStore
 
 		public static bool HasIdentifier(this Commit attempt)
 		{
-			return attempt.StreamId != Guid.Empty && attempt.CommitId != Guid.Empty;
+			return !string.IsNullOrEmpty(attempt.StreamId) && attempt.CommitId != Guid.Empty;
 		}
 
 		public static bool IsEmpty(this Commit attempt)
 		{
 			return attempt == null || attempt.Events.Count == 0;
 		}
+
+        public static bool IsEmpty(this string id)
+        {
+            return string.IsNullOrEmpty(id);
+        }
+        public static bool IsNotEmpty(this string id)
+        {
+            return !string.IsNullOrEmpty(id);
+        }
+
 	}
 }

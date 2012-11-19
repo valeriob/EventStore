@@ -6,7 +6,7 @@ namespace EventStore.Persistence.RavenPersistence
 	{
 		public string Id { get; set; }
         public string Partition { get; set; }
-		public Guid StreamId { get; set; }
+        public string StreamId { get; set; }
 		public int HeadRevision { get; set; }
 		public int SnapshotRevision { get; set; }
 		public int SnapshotAge

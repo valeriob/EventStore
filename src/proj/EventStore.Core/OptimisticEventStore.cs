@@ -37,12 +37,12 @@ namespace EventStore
 				hook.Dispose();
 		}
 
-		public virtual IEventStream CreateStream(Guid streamId)
+        public virtual IEventStream CreateStream(string streamId)
 		{
 			Logger.Info(Resources.CreatingStream, streamId);
 			return new OptimisticEventStream(streamId, this);
 		}
-		public virtual IEventStream OpenStream(Guid streamId, int minRevision, int maxRevision)
+        public virtual IEventStream OpenStream(string streamId, int minRevision, int maxRevision)
 		{
 			maxRevision = maxRevision <= 0 ? int.MaxValue : maxRevision;
 
@@ -59,7 +59,7 @@ namespace EventStore
 			return new OptimisticEventStream(snapshot, this, maxRevision);
 		}
 
-		public virtual IEnumerable<Commit> GetFrom(Guid streamId, int minRevision, int maxRevision)
+		public virtual IEnumerable<Commit> GetFrom(string streamId, int minRevision, int maxRevision)
 		{
 			foreach (var commit in this.persistence.GetFrom(streamId, minRevision, maxRevision))
 			{

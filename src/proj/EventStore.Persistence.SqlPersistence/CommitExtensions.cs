@@ -24,7 +24,7 @@ namespace EventStore.Persistence.SqlPersistence
 			var events = serializer.Deserialize<List<EventMessage>>(record, PayloadIndex);
 
 			return new Commit(
-				record[StreamIdIndex].ToGuid(),
+                record[StreamIdIndex].ToString(),
 				record[StreamRevisionIndex].ToInt(),
 				record[CommitIdIndex].ToGuid(),
 				record[CommitSequenceIndex].ToInt(),

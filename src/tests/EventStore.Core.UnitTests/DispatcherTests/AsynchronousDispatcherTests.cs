@@ -15,7 +15,7 @@ namespace EventStore.Core.UnitTests.DispatcherTests
 	[Subject("AsynchronousDispatchScheduler")]
 	public class when_instantiating_the_asynchronous_dispatch_scheduler
 	{
-		static readonly Guid streamId = Guid.NewGuid();
+        static readonly string streamId = Guid.NewGuid() + "";
 		private static readonly Commit[] commits =
 		{
 			new Commit(streamId, 0, Guid.NewGuid(), 0, SystemTime.UtcNow, null, null),
@@ -51,7 +51,7 @@ namespace EventStore.Core.UnitTests.DispatcherTests
 	[Subject("AsynchronousDispatchScheduler")]
 	public class when_asynchronously_scheduling_a_commit_for_dispatch
 	{
-		static readonly Commit commit = new Commit(Guid.NewGuid(), 0, Guid.NewGuid(), 0, SystemTime.UtcNow, null, null);
+        static readonly Commit commit = new Commit(Guid.NewGuid() + "", 0, Guid.NewGuid(), 0, SystemTime.UtcNow, null, null);
 		static readonly Mock<IDispatchCommits> dispatcher = new Mock<IDispatchCommits>();
 		static readonly Mock<IPersistStreams> persistence = new Mock<IPersistStreams>();
 		static AsynchronousDispatchScheduler dispatchScheduler;

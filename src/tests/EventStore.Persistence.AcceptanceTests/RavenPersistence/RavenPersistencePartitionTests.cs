@@ -91,11 +91,11 @@ namespace EventStore.Persistence.AcceptanceTests.RavenPersistence
 		Establish context = () =>
 		{
             now = SystemTime.UtcNow.AddYears(1);
-		    first = Guid.NewGuid().BuildAttempt(now.AddSeconds(1));
+            first = (Guid.NewGuid() + "").BuildAttempt(now.AddSeconds(1));
 		    second = first.BuildNextAttempt();
 		    third = second.BuildNextAttempt();
 		    fourth = third.BuildNextAttempt();
-            fifth = Guid.NewGuid().BuildAttempt(now.AddSeconds(1));
+            fifth = (Guid.NewGuid() + "").BuildAttempt(now.AddSeconds(1));
 
 		    persistence1 = NewEventStoreWithPartition();
             persistence2 = NewEventStoreWithPartition();
@@ -157,12 +157,12 @@ namespace EventStore.Persistence.AcceptanceTests.RavenPersistence
     
 	public abstract class using_raven_persistence_with_partitions
 	{
-	    protected static Guid streamId;
+	    protected static string streamId;
 		protected static List<IPersistStreams> instantiatedPersistence;
 
 		Establish context = () =>
 		{
-            streamId = Guid.NewGuid();
+            streamId = Guid.NewGuid() + "";
             instantiatedPersistence = new List<IPersistStreams>();
 		};
 

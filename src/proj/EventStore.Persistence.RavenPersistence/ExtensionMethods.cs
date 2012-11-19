@@ -76,7 +76,7 @@ namespace EventStore.Persistence.RavenPersistence
 				serializer.Deserialize<object>(snapshot.Payload));
 		}
 
-		public static string ToRavenStreamId(this Guid streamId, string partition)
+		public static string ToRavenStreamId(this string streamId, string partition)
 		{
 			var id = string.Format("StreamHeads/{0}", streamId);
 

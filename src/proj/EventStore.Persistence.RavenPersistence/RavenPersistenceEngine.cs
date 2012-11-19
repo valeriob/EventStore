@@ -96,7 +96,7 @@
 			});
 		}
 
-		public virtual IEnumerable<Commit> GetFrom(Guid streamId, int minRevision, int maxRevision)
+		public virtual IEnumerable<Commit> GetFrom(string streamId, int minRevision, int maxRevision)
 		{
 			Logger.Debug(Messages.GettingAllCommitsBetween, streamId, minRevision, maxRevision);
 
@@ -218,7 +218,7 @@
 				.Select(s => s.ToStreamHead());
 		}
 
-		public virtual Snapshot GetSnapshot(Guid streamId, int maxRevision)
+        public virtual Snapshot GetSnapshot(string streamId, int maxRevision)
 		{
 			Logger.Debug(Messages.GettingRevision, streamId, maxRevision);
 

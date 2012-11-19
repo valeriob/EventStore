@@ -22,7 +22,7 @@ namespace EventStore
 		/// <returns>A series of committed events from the stream specified sorted in ascending order..</returns>
 		/// <exception cref="StorageException" />
 		/// <exception cref="StorageUnavailableException" />
-		IEnumerable<Commit> GetFrom(Guid streamId, int minRevision, int maxRevision);
+        IEnumerable<Commit> GetFrom(string streamId, int minRevision, int maxRevision);
 
 		/// <summary>
 		/// Writes the to-be-commited events provided to the underlying persistence mechanism.

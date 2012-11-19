@@ -70,11 +70,11 @@ namespace EventStore.Persistence.SqlPersistence
 				return;
 
 			Logger.Debug(Messages.InitializingStorage);
-			this.ExecuteCommand(Guid.Empty, statement =>
+			this.ExecuteCommand(string.Empty, statement =>
 				statement.ExecuteWithoutExceptions(this.dialect.InitializeStorage));
 		}
 
-		public virtual IEnumerable<Commit> GetFrom(Guid streamId, int minRevision, int maxRevision)
+        public virtual IEnumerable<Commit> GetFrom(string streamId, int minRevision, int maxRevision)
 		{
 			Logger.Debug(Messages.GettingAllCommitsBetween, streamId, minRevision, maxRevision);
 			return this.ExecuteQuery(streamId, query =>
@@ -95,7 +95,7 @@ namespace EventStore.Persistence.SqlPersistence
 			start = start < EpochTime ? EpochTime : start;
 
 			Logger.Debug(Messages.GettingAllCommitsFrom, start);
-			return this.ExecuteQuery(Guid.Empty, query =>
+			return this.ExecuteQuery(string.Empty, query =>
 			{
 				var statement = this.dialect.GetCommitsFromInstant;
 				query.AddParameter(this.dialect.CommitStamp, start);
@@ -110,7 +110,7 @@ namespace EventStore.Persistence.SqlPersistence
 			end = end < EpochTime ? EpochTime : end;
 
 			Logger.Debug(Messages.GettingAllCommitsFromTo, start, end);
-			return this.ExecuteQuery(Guid.Empty, query =>
+            return this.ExecuteQuery(string.Empty, query =>
 			{
 				var statement = this.dialect.GetCommitsFromToInstant;
 				query.AddParameter(this.dialect.CommitStampStart, start);
@@ -175,7 +175,7 @@ namespace EventStore.Persistence.SqlPersistence
 		public virtual IEnumerable<Commit> GetUndispatchedCommits()
 		{
 			Logger.Debug(Messages.GettingUndispatchedCommits);
-			return this.ExecuteQuery(Guid.Empty, query =>
+			return this.ExecuteQuery(string.Empty, query =>
 				query.ExecutePagedQuery(this.dialect.GetUndispatchedCommits, (q, r) => { }))
 					.Select(x => x.GetCommit(this.serializer))
 					.ToArray(); // avoid paging
@@ -194,7 +194,7 @@ namespace EventStore.Persistence.SqlPersistence
 		public virtual IEnumerable<StreamHead> GetStreamsToSnapshot(int maxThreshold)
 		{
 			Logger.Debug(Messages.GettingStreamsToSnapshot);
-			return this.ExecuteQuery(Guid.Empty, query =>
+            return this.ExecuteQuery(string.Empty, query =>
 			{
 				var statement = this.dialect.GetStreamsRequiringSnapshots;
 				query.AddParameter(this.dialect.StreamId, Guid.Empty);
@@ -204,7 +204,7 @@ namespace EventStore.Persistence.SqlPersistence
 					.Select(x => x.GetStreamToSnapshot());
 			});
 		}
-		public virtual Snapshot GetSnapshot(Guid streamId, int maxRevision)
+        public virtual Snapshot GetSnapshot(string streamId, int maxRevision)
 		{
 			Logger.Debug(Messages.GettingRevision, streamId, maxRevision);
 			return this.ExecuteQuery(streamId, query =>
@@ -230,11 +230,11 @@ namespace EventStore.Persistence.SqlPersistence
 		public virtual void Purge()
 		{
 			Logger.Warn(Messages.PurgingStorage);
-			this.ExecuteCommand(Guid.Empty, cmd =>
+			this.ExecuteCommand(string.Empty, cmd =>
 				cmd.ExecuteNonQuery(this.dialect.PurgeStorage));
 		}
 
-		protected virtual IEnumerable<T> ExecuteQuery<T>(Guid streamId, Func<IDbStatement, IEnumerable<T>> query)
+        protected virtual IEnumerable<T> ExecuteQuery<T>(string streamId, Func<IDbStatement, IEnumerable<T>> query)
 		{
 			this.ThrowWhenDisposed();
 
@@ -284,7 +284,7 @@ namespace EventStore.Persistence.SqlPersistence
 			throw new ObjectDisposedException(Messages.AlreadyDisposed);
 		}
 
-		protected virtual T ExecuteCommand<T>(Guid streamId, Func<IDbStatement, T> command)
+		protected virtual T ExecuteCommand<T>(string streamId, Func<IDbStatement, T> command)
 		{
 			this.ThrowWhenDisposed();
 

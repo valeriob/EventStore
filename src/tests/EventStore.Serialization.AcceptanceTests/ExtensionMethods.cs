@@ -20,7 +20,7 @@ namespace EventStore.Serialization.AcceptanceTests
 			};
 		}
 
-		public static Commit BuildCommit(this Guid streamId)
+		public static Commit BuildCommit(this string streamId)
 		{
 			const int StreamRevision = 2;
 			const int CommitSequence = 2;

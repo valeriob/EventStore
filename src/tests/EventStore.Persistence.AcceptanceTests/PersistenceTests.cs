@@ -414,7 +414,7 @@ namespace EventStore.Persistence.AcceptanceTests
 	{
 		protected static readonly PersistenceFactoryScanner FactoryScanner = new PersistenceFactoryScanner();
 		protected static readonly IPersistenceFactory Factory = FactoryScanner.GetFactory();
-		protected static Guid streamId = Guid.NewGuid();
+        protected static string streamId = Guid.NewGuid() + "";
 		protected static IPersistStreams persistence;
 
 		Establish context = () =>
@@ -427,7 +427,7 @@ namespace EventStore.Persistence.AcceptanceTests
 		{
 			persistence.Dispose();
 			persistence = null;
-			streamId = Guid.NewGuid();
+            streamId = Guid.NewGuid() + "";
 		};
 	}
 }

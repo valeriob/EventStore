@@ -15,7 +15,7 @@ namespace EventStore.Core.UnitTests.ConversionTests
 	public class when_opening_a_commit_that_does_not_have_convertible_events : using_event_converter
 	{
 		static readonly Commit commit = new Commit(
-			Guid.NewGuid(), 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
+            Guid.NewGuid() + "", 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
 		static Commit converted;
 
 		Establish context = () =>
@@ -35,7 +35,7 @@ namespace EventStore.Core.UnitTests.ConversionTests
 	public class when_opening_a_commit_that_has_convertible_events : using_event_converter
 	{
 		static readonly Commit commit = new Commit(
-			Guid.NewGuid(), 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
+            Guid.NewGuid() + "", 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
 		static readonly Guid id = Guid.NewGuid();
 		static readonly EventMessage eventMessage = new EventMessage
 		{
@@ -60,7 +60,7 @@ namespace EventStore.Core.UnitTests.ConversionTests
 	public class when_an_event_converter_implements_the_IConvertEvents_interface_explicitly : using_event_converter
 	{
 		static readonly Commit commit = new Commit(
-			Guid.NewGuid(), 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
+            Guid.NewGuid() + "", 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
 		static readonly Guid id = Guid.NewGuid();
 		static readonly EventMessage eventMessage = new EventMessage
 		{

@@ -15,7 +15,7 @@ namespace EventStore
 		/// <param name="streamId">The value which uniquely identifies the stream to which the snapshot applies.</param>
 		/// <param name="streamRevision">The position at which the snapshot applies.</param>
 		/// <param name="payload">The snapshot or materialized view of the stream at the revision indicated.</param>
-		public Snapshot(Guid streamId, int streamRevision, object payload)
+        public Snapshot(string streamId, int streamRevision, object payload)
 			: this()
 		{
 			this.StreamId = streamId;
@@ -33,7 +33,7 @@ namespace EventStore
 		/// <summary>
 		/// Gets the value which uniquely identifies the stream to which the snapshot applies.
 		/// </summary>
-		[DataMember] public virtual Guid StreamId { get; private set; }
+        [DataMember] public virtual string StreamId { get; private set; }
 
 		/// <summary>
 		/// Gets the position at which the snapshot applies.

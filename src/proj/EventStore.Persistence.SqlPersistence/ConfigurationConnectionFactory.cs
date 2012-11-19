@@ -44,13 +44,13 @@ namespace EventStore.Persistence.SqlPersistence
 			if (string.IsNullOrEmpty(settings.Key))
 				throw new ConfigurationErrorsException(Messages.NotConnectionsAvailable);
 
-			return OpenScope(Guid.Empty, settings.Key);
+			return OpenScope(string.Empty, settings.Key);
 		}
 		public static IDisposable OpenScope(string connectionName)
 		{
-			return OpenScope(Guid.Empty, connectionName);
+            return OpenScope(string.Empty, connectionName);
 		}
-		public static IDisposable OpenScope(Guid streamId, string connectionName)
+        public static IDisposable OpenScope(string streamId, string connectionName)
 		{
 			var factory = new ConfigurationConnectionFactory(connectionName);
 			return factory.Open(streamId, connectionName);
@@ -61,17 +61,17 @@ namespace EventStore.Persistence.SqlPersistence
 			get { return this.GetConnectionStringSettings(this.masterConnectionName); }
 		}
 
-		public virtual IDbConnection OpenMaster(Guid streamId)
+        public virtual IDbConnection OpenMaster(string streamId)
 		{
 			Logger.Verbose(Messages.OpeningMasterConnection, this.masterConnectionName);
 			return this.Open(streamId, this.masterConnectionName);
 		}
-		public virtual IDbConnection OpenReplica(Guid streamId)
+        public virtual IDbConnection OpenReplica(string streamId)
 		{
 			Logger.Verbose(Messages.OpeningReplicaConnection, this.replicaConnectionName);
 			return this.Open(streamId, this.replicaConnectionName);
 		}
-		protected virtual IDbConnection Open(Guid streamId, string connectionName)
+        protected virtual IDbConnection Open(string streamId, string connectionName)
 		{
 			var setting = this.GetSetting(connectionName);
 			var connectionString = this.BuildConnectionString(streamId, setting);
@@ -148,7 +148,7 @@ namespace EventStore.Persistence.SqlPersistence
 			return settings;
 		}
 
-		protected virtual string BuildConnectionString(Guid streamId, ConnectionStringSettings setting)
+        protected virtual string BuildConnectionString(string streamId, ConnectionStringSettings setting)
 		{
 			if (this.shards == 0)
 				return setting.ConnectionString;
@@ -156,11 +156,14 @@ namespace EventStore.Persistence.SqlPersistence
 			Logger.Verbose(Messages.EmbeddingShardKey, setting.Name);
 			return setting.ConnectionString.FormatWith(this.ComputeHashKey(streamId));
 		}
-		protected virtual string ComputeHashKey(Guid streamId)
+        protected virtual string ComputeHashKey(string streamId)
 		{
 			// simple sharding scheme which could easily be improved through such techniques
 			// as consistent hashing (Amazon Dynamo) or other kinds of sharding.
-			return (this.shards == 0 ? 0 : streamId.ToByteArray()[0] % this.shards).ToString();
+            if (string.IsNullOrEmpty(streamId))
+                return streamId;
+            var bytes = System.Text.Encoding.Default.GetBytes(streamId);
+            return (this.shards == 0 ? 0 : bytes[0] % this.shards).ToString();
 		}
 	}
 }

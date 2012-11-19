@@ -39,7 +39,7 @@ namespace EventStore.Persistence.InMemoryPersistence
 			Logger.Info(Resources.InitializingEngine);
 		}
 
-		public virtual IEnumerable<Commit> GetFrom(Guid streamId, int minRevision, int maxRevision)
+        public virtual IEnumerable<Commit> GetFrom(string streamId, int minRevision, int maxRevision)
 		{
 			this.ThrowWhenDisposed();
 			Logger.Debug(Resources.GettingAllCommitsFromRevision, streamId, minRevision, maxRevision);
@@ -127,7 +127,7 @@ namespace EventStore.Persistence.InMemoryPersistence
 				return this.heads.Where(x => x.HeadRevision >= x.SnapshotRevision + maxThreshold)
 					.Select(stream => new StreamHead(stream.StreamId, stream.HeadRevision, stream.SnapshotRevision));
 		}
-		public virtual Snapshot GetSnapshot(Guid streamId, int maxRevision)
+        public virtual Snapshot GetSnapshot(string streamId, int maxRevision)
 		{
 			this.ThrowWhenDisposed();
 			Logger.Debug(Resources.GettingSnapshotForStream, streamId, maxRevision);

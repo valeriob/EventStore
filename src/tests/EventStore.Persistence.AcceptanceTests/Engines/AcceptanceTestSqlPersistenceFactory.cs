@@ -28,7 +28,7 @@ namespace EventStore.Persistence.AcceptanceTests.Engines
 		{
 		}
 
-		protected override string BuildConnectionString(Guid streamId, ConnectionStringSettings setting)
+		protected override string BuildConnectionString(string streamId, ConnectionStringSettings setting)
 		{
 			return setting.ConnectionString
 				.Replace("[HOST]", "host".GetSetting() ?? "localhost")

@@ -138,9 +138,9 @@ namespace EventStore.Core.UnitTests
 		static readonly Guid StreamId = Guid.NewGuid();
 		static readonly Commit[] TrackedCommits = new[]
 		{
-			BuildCommit(Guid.NewGuid(), Guid.NewGuid()),
-			BuildCommit(Guid.NewGuid(), Guid.NewGuid()),
-			BuildCommit(Guid.NewGuid(), Guid.NewGuid())
+			BuildCommit(Guid.NewGuid()+"", Guid.NewGuid()),
+			BuildCommit(Guid.NewGuid()+"", Guid.NewGuid()),
+			BuildCommit(Guid.NewGuid()+"", Guid.NewGuid())
 		};
 
 		static OptimisticPipelineHook hook;
@@ -156,7 +156,7 @@ namespace EventStore.Core.UnitTests
 
 		It should_only_contain_streams_explicitly_tracked = () =>
 		{
-			var untracked = BuildCommit(Guid.Empty, TrackedCommits[0].CommitId);
+			var untracked = BuildCommit(string.Empty, TrackedCommits[0].CommitId);
 			hook.Contains(untracked).ShouldBeFalse();
 		};
 
@@ -173,7 +173,7 @@ namespace EventStore.Core.UnitTests
 			hook.Contains(droppedFromTracking).ShouldBeFalse();
 		};
 
-		private static Commit BuildCommit(Guid streamId, Guid commitId)
+		private static Commit BuildCommit(string streamId, Guid commitId)
 		{
 			return new Commit(streamId, 0, commitId, 0, SystemTime.UtcNow, null, null);
 		}
@@ -181,17 +181,17 @@ namespace EventStore.Core.UnitTests
 
 	public abstract class using_commit_hooks
 	{
-		protected static Guid streamId = Guid.NewGuid();
+        protected static string streamId = Guid.NewGuid() + "";
 		protected static OptimisticPipelineHook hook;
 
 		Establish context = () =>
 		{
-			streamId = Guid.NewGuid();
+            streamId = Guid.NewGuid() + "";
 			hook = new OptimisticPipelineHook();
 		};
 
 		Cleanup everything = () =>
-			streamId = Guid.NewGuid();
+            streamId = Guid.NewGuid() + "";
 
 		protected static Commit BuildCommitStub(Guid commitId)
 		{

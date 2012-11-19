@@ -348,7 +348,7 @@ namespace EventStore.Core.UnitTests
 	{
 		protected const int DefaultStreamRevision = 1;
 		protected const int DefaultCommitSequence = 1;
-		protected static Guid streamId = Guid.NewGuid();
+        protected static string streamId = Guid.NewGuid() + "";
 		protected static OptimisticEventStream stream;
 		protected static Mock<ICommitEvents> persistence;
 
@@ -360,7 +360,7 @@ namespace EventStore.Core.UnitTests
 		};
 
 		Cleanup cleanup = () =>
-			streamId = Guid.NewGuid();
+            streamId = Guid.NewGuid() + "";
 
 		protected static Commit BuildCommitStub(int revision, int sequence, int eventCount)
 		{

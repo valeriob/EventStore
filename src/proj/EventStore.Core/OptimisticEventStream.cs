@@ -19,12 +19,12 @@ namespace EventStore
 		private readonly ICommitEvents persistence;
 		private bool disposed;
 
-		public OptimisticEventStream(Guid streamId, ICommitEvents persistence)
+        public OptimisticEventStream(string streamId, ICommitEvents persistence)
 		{
 			this.StreamId = streamId;
 			this.persistence = persistence;
 		}
-		public OptimisticEventStream(Guid streamId, ICommitEvents persistence, int minRevision, int maxRevision)
+        public OptimisticEventStream(string streamId, ICommitEvents persistence, int minRevision, int maxRevision)
 			: this(streamId, persistence)
 		{
 			var commits = persistence.GetFrom(streamId, minRevision, maxRevision);
@@ -93,7 +93,7 @@ namespace EventStore
 			this.disposed = true;
 		}
 
-		public virtual Guid StreamId { get; private set; }
+        public virtual string StreamId { get; private set; }
 		public virtual int StreamRevision { get; private set; }
 		public virtual int CommitSequence { get; private set; }
 

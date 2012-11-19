@@ -12,8 +12,8 @@ namespace EventStore
 	{
 		private static readonly ILog Logger = LogFactory.BuildLogger(typeof(OptimisticPipelineHook));
 		private const int MaxStreamsToTrack = 100;
-		private readonly LinkedList<Guid> maxItemsToTrack = new LinkedList<Guid>();
-		private readonly IDictionary<Guid, Commit> heads = new Dictionary<Guid, Commit>();
+        private readonly LinkedList<string> maxItemsToTrack = new LinkedList<string>();
+        private readonly IDictionary<string, Commit> heads = new Dictionary<string, Commit>();
 		private readonly int maxStreamsToTrack;
 
 		public OptimisticPipelineHook()
@@ -114,7 +114,7 @@ namespace EventStore
 			return this.GetStreamHead(attempt.StreamId) != null;
 		}
 
-		private Commit GetStreamHead(Guid streamId)
+        private Commit GetStreamHead(string streamId)
 		{
 			lock (this.maxItemsToTrack)
 			{

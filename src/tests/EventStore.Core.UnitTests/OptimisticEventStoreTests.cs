@@ -381,7 +381,7 @@ namespace EventStore.Core.UnitTests
 
 	public abstract class using_persistence
 	{
-		protected static Guid streamId = Guid.NewGuid();
+        protected static string streamId = Guid.NewGuid() + "";
 		protected static Mock<IPersistStreams> persistence;
 		protected static OptimisticEventStore store;
 		protected static List<Mock<IPipelineHook>> pipelineHooks;
@@ -395,7 +395,7 @@ namespace EventStore.Core.UnitTests
 		};
 
 		Cleanup everything = () =>
-			streamId = Guid.NewGuid();
+            streamId = Guid.NewGuid() + "";
 
 		protected static Commit BuildCommitStub(Guid commitId)
 		{

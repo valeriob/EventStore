@@ -94,7 +94,7 @@ namespace EventStore.Serialization.AcceptanceTests
 	[Subject("Serialization")]
 	public class when_serializing_a_commit_message : using_serialization
 	{
-		static readonly Commit Message = Guid.NewGuid().BuildCommit();
+        static readonly Commit Message = (Guid.NewGuid() + "").BuildCommit();
 		static byte[] serialized;
 		static Commit deserialized;
 
@@ -135,7 +135,7 @@ namespace EventStore.Serialization.AcceptanceTests
 	public class when_serializing_an_untyped_payload_on_a_snapshot : using_serialization
 	{
 		static readonly IDictionary<string, List<int>> Payload = new Dictionary<string, List<int>>();
-		static readonly Snapshot Snapshot = new Snapshot(Guid.NewGuid(), 42, Payload);
+		static readonly Snapshot Snapshot = new Snapshot(Guid.NewGuid()+"", 42, Payload);
 		static byte[] serialized;
 		static Snapshot deserialized;
 

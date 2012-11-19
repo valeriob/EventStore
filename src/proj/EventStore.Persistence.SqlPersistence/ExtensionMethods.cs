@@ -16,6 +16,10 @@ namespace EventStore.Persistence.SqlPersistence
 			var bytes = value as byte[];
 			return bytes != null ? new Guid(bytes) : Guid.Empty;
 		}
+        public static string ToString(this object value)
+        {
+            return (string)value;
+        }
 		public static int ToInt(this object value)
 		{
             return  value is int ? (int)value : 

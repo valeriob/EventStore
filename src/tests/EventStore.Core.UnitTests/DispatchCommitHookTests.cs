@@ -13,7 +13,7 @@ namespace EventStore.Core.UnitTests
 	public class when_a_commit_has_been_persisted
 	{
 		static readonly Commit commit = new Commit(
-			Guid.NewGuid(), 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
+            Guid.NewGuid() + "", 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
 		static readonly Mock<IScheduleDispatches> dispatcher = new Mock<IScheduleDispatches>();
 		static readonly DispatchSchedulerPipelineHook DispatchSchedulerHook = new DispatchSchedulerPipelineHook(dispatcher.Object);
 
@@ -31,7 +31,7 @@ namespace EventStore.Core.UnitTests
 	public class when_the_hook_has_no_dispatcher_configured
 	{
 		static readonly Commit commit = new Commit(
-			Guid.NewGuid(), 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
+            Guid.NewGuid() + "", 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
 		static readonly DispatchSchedulerPipelineHook DispatchSchedulerHook = new DispatchSchedulerPipelineHook();
 		static Exception thrown;
 
@@ -46,7 +46,7 @@ namespace EventStore.Core.UnitTests
 	public class when_a_commit_is_selected
 	{
 		static readonly Commit commit = new Commit(
-			Guid.NewGuid(), 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
+            Guid.NewGuid() + "", 0, Guid.NewGuid(), 0, DateTime.MinValue, null, null);
 		static readonly DispatchSchedulerPipelineHook DispatchSchedulerHook = new DispatchSchedulerPipelineHook();
 		static Commit selected;
 

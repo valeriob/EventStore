@@ -16,7 +16,7 @@ namespace EventStore
 		/// </summary>
 		/// <param name="streamId">The value which uniquely identifies the stream to be created.</param>
 		/// <returns>An empty stream.</returns>
-		IEventStream CreateStream(Guid streamId);
+        IEventStream CreateStream(string streamId);
 
 		/// <summary>
 		/// Reads the stream indicated from the minimum revision specified up to the maximum revision specified or creates
@@ -29,7 +29,7 @@ namespace EventStore
 		/// <exception cref="StorageException" />
 		/// <exception cref="StorageUnavailableException" />
 		/// <exception cref="StreamNotFoundException" />
-		IEventStream OpenStream(Guid streamId, int minRevision, int maxRevision);
+        IEventStream OpenStream(string streamId, int minRevision, int maxRevision);
 
 		/// <summary>
 		/// Reads the stream indicated from the point of the snapshot forward until the maximum revision specified.
