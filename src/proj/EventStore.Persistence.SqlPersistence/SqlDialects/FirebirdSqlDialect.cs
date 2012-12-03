@@ -22,22 +22,6 @@ namespace EventStore.Persistence.SqlPersistence.SqlDialects
 		{
 			get { return this.Paged(base.GetCommitsFromStartingRevision); }
 		}
-		public override string GetCommitsFromInstant
-		{
-			get { return this.Paged(base.GetCommitsFromInstant); }
-		}
-		public override string GetCommitsFromToInstant
-		{
-			get { return this.Paged(base.GetCommitsFromToInstant); }
-		}
-		public override string GetStreamsRequiringSnapshots
-		{
-			get { return this.Paged(base.GetStreamsRequiringSnapshots); }
-		}
-		public override string GetUndispatchedCommits
-		{
-			get { return this.Paged(base.GetUndispatchedCommits); }
-		}
 
 		private string Paged(string query)
 		{

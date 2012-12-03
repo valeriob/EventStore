@@ -23,25 +23,9 @@ namespace EventStore.Persistence.SqlPersistence.SqlDialects
 		{
 			get { return base.GetSnapshot.Replace("SELECT *", "SELECT TOP 1 *").Replace("LIMIT 1", string.Empty); }
 		}
-		public override string GetStreamsRequiringSnapshots
-		{
-			get { return RemovePaging(AccessStatements.GetStreamsToSnapshot); }
-		}
-		public override string GetCommitsFromInstant
-		{
-			get { return RemovePaging(base.GetCommitsFromInstant); }
-		}
-		public override string GetCommitsFromToInstant
-		{
-			get { return RemovePaging(base.GetCommitsFromToInstant); }
-		}
 		public override string GetCommitsFromStartingRevision
 		{
 			get { return RemovePaging(base.GetCommitsFromStartingRevision); }
-		}
-		public override string GetUndispatchedCommits
-		{
-			get { return RemovePaging(base.GetUndispatchedCommits); }
 		}
 		private static string RemovePaging(string query)
 		{

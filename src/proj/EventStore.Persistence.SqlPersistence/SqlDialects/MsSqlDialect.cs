@@ -20,23 +20,6 @@ namespace EventStore.Persistence.SqlPersistence.SqlDialects
 		{
 			get { return NaturalPaging(base.GetCommitsFromStartingRevision); }
 		}
-		public override string GetCommitsFromInstant
-		{
-			get { return CommonTableExpressionPaging(base.GetCommitsFromInstant); }
-		}
-		public override string GetCommitsFromToInstant
-		{
-			get { return CommonTableExpressionPaging(base.GetCommitsFromToInstant); }
-		}
-		public override string GetUndispatchedCommits
-		{
-			get { return CommonTableExpressionPaging(base.GetUndispatchedCommits); }
-		}
-		public override string GetStreamsRequiringSnapshots
-		{
-			get { return NaturalPaging(base.GetStreamsRequiringSnapshots); }
-		}
-
 		private static string NaturalPaging(string query)
 		{
 			return "SET ROWCOUNT @Limit;\n" + RemovePaging(query);

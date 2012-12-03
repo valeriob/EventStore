@@ -93,10 +93,13 @@ namespace EventStore.Persistence.SqlPersistence.SqlDialects
 				return command.ExecuteScalar();
 		}
 
-		public virtual IEnumerable<IDataRecord> ExecuteWithQuery(string queryText)
-		{
-			return this.ExecuteQuery(queryText, (query, latest) => { }, InfinitePageSize);
-		}
+        public virtual IEnumerable<IDataRecord> ExecuteWithQuery(string queryText)
+        {
+            var command = this.BuildCommand(queryText);
+            using (var reader = command.ExecuteReader())
+                while (reader.Read())
+                    yield return reader;
+        }
 		public virtual IEnumerable<IDataRecord> ExecutePagedQuery(string queryText, NextPageDelegate nextpage)
 		{
 			var pageSize = this.dialect.CanPage ? this.PageSize : InfinitePageSize;

@@ -142,19 +142,17 @@ SELECT @StreamId, @StreamRevision, @Payload
    AND CommitId = @CommitId;</value>
   </data>
   <data name="GetCommitsFromInstant" xml:space="preserve">
-    <value>SELECT StreamId, StreamRevision, CommitId, CommitSequence, CommitStamp, Headers, Payload
-  FROM Commits
- WHERE CommitStamp &gt;= @CommitStamp
- ORDER BY CommitSequence, StreamId, StreamRevision
- LIMIT @Limit OFFSET @Skip;</value>
+    <value>SELECT StreamId, StreamRevision, CommitId, CommitSequence, CommitStamp, Headers, Payload 
+FROM COMMITS 
+WHERE CommitStamp &gt;= @CommitStamp
+ORDER BY CommitStamp</value>
   </data>
   <data name="GetCommitsFromToInstant" xml:space="preserve">
     <value>SELECT StreamId, StreamRevision, CommitId, CommitSequence, CommitStamp, Headers, Payload
-  FROM Commits
- WHERE CommitStamp &gt;= @CommitStampStart
-   AND CommitStamp &lt; @CommitStampEnd
- ORDER BY CommitSequence, StreamId, StreamRevision
- LIMIT @Limit OFFSET @Skip;</value>
+FROM Commits
+WHERE CommitStamp &gt;= @CommitStampStart
+AND CommitStamp &lt; @CommitStampEnd
+ORDER BY CommitStamp</value>
   </data>
   <data name="GetCommitsFromStartingRevision" xml:space="preserve">
     <value>SELECT StreamId, StreamRevision, CommitId, CommitSequence, CommitStamp, Headers, Payload
@@ -180,18 +178,15 @@ SELECT @StreamId, @StreamRevision, @Payload
  LEFT OUTER JOIN Snapshots AS S
     ON C.StreamId = S.StreamId
    AND C.StreamRevision &gt;= S.StreamRevision
- WHERE C.StreamId &gt; @StreamId
  GROUP BY C.StreamId
 HAVING MAX(C.StreamRevision) &gt;= MAX(COALESCE(S.StreamRevision, 0)) + @Threshold
- ORDER BY C.StreamId
- LIMIT @Limit;</value>
+ ORDER BY C.StreamId</value>
   </data>
   <data name="GetUndispatchedCommits" xml:space="preserve">
     <value>SELECT StreamId, StreamRevision, CommitId, CommitSequence, CommitStamp, Headers, Payload
   FROM Commits
  WHERE Dispatched = 0
- ORDER BY CommitSequence
- LIMIT @Limit OFFSET @Skip;</value>
+ ORDER BY CommitStamp</value>
   </data>
   <data name="MarkCommitAsDispatched" xml:space="preserve">
     <value>UPDATE Commits
