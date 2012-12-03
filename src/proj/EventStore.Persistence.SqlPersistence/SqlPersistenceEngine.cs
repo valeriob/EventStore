@@ -109,6 +109,9 @@ namespace EventStore.Persistence.SqlPersistence
             foreach (var record in records)
                 foreach (var commit in Remap(record, bucket))
                     yield return commit;
+
+            foreach (var commit in bucket.Commits)
+                yield return commit;
         }
         class Bucket
         {
@@ -151,6 +154,9 @@ namespace EventStore.Persistence.SqlPersistence
             foreach (var record in records)
                 foreach (var commit in Remap(record, bucket))
                     yield return commit;
+
+            foreach (var commit in bucket.Commits)
+                yield return commit;
 		}
 
 		public virtual void Commit(Commit attempt)
