@@ -9,6 +9,7 @@ namespace EventStore.Persistence.SqlPersistence
 	using Logging;
 	using Persistence;
 	using Serialization;
+    using System.IO;
 
 	public class SqlPersistenceEngine : IPersistStreams
 	{
@@ -90,19 +91,46 @@ namespace EventStore.Persistence.SqlPersistence
 			});
 		}
 
-		public virtual IEnumerable<Commit> GetFrom(DateTime start)
-		{
-			start = start < EpochTime ? EpochTime : start;
+        public virtual IEnumerable<Commit> GetFrom(DateTime start)
+        {
+            start = start < EpochTime ? EpochTime : start;
 
-			Logger.Debug(Messages.GettingAllCommitsFrom, start);
-			return this.ExecuteQuery(Guid.Empty, query =>
-			{
-				var statement = this.dialect.GetCommitsFromInstant;
-				query.AddParameter(this.dialect.CommitStamp, start);
-				return query.ExecutePagedQuery(statement, (q, r) => { })
-					.Select(x => x.GetCommit(this.serializer));
-			});
-		}
+            Logger.Debug(Messages.GettingAllCommitsFrom, start);
+
+            var records = this.ExecuteQuery(Guid.Empty, query =>
+            {
+                var statement = this.dialect.GetCommitsFromInstant;
+                query.AddParameter(this.dialect.CommitStamp, start);
+                return query.ExecuteWithQuery(statement);
+            });
+
+            var bucket = new Bucket { Timestamp = DateTime.MinValue, Commits = new List<Commit>() };
+
+            foreach (var record in records)
+                foreach (var commit in Remap(record, bucket))
+                    yield return commit;
+        }
+        class Bucket
+        {
+            public DateTime Timestamp { get; set; }
+            public List<Commit> Commits { get; set; }
+        }
+        IEnumerable<Commit> Remap(IDataRecord reader, Bucket state)
+        {
+            var bucket = state.Commits;
+            var currentCommit = reader.GetCommit(serializer);
+
+            if (state.Timestamp != currentCommit.CommitStamp)
+            {
+                var commits = bucket.OrderBy(o => o.StreamId).ThenBy(o => o.StreamRevision);
+                foreach (var commit in commits)
+                    yield return commit;
+
+                bucket.Clear();
+                state.Timestamp = currentCommit.CommitStamp;
+                bucket.Add(currentCommit);
+            }
+        }
 
 		public virtual IEnumerable<Commit> GetFromTo(DateTime start, DateTime end)
 		{
@@ -110,14 +138,19 @@ namespace EventStore.Persistence.SqlPersistence
 			end = end < EpochTime ? EpochTime : end;
 
 			Logger.Debug(Messages.GettingAllCommitsFromTo, start, end);
-			return this.ExecuteQuery(Guid.Empty, query =>
-			{
-				var statement = this.dialect.GetCommitsFromToInstant;
-				query.AddParameter(this.dialect.CommitStampStart, start);
-				query.AddParameter(this.dialect.CommitStampEnd, end);
-				return query.ExecutePagedQuery(statement, (q, r) => { })
-					.Select(x => x.GetCommit(this.serializer));
-			});
+            var records = this.ExecuteQuery(Guid.Empty, query =>
+            {
+                var statement = this.dialect.GetCommitsFromToInstant;
+                query.AddParameter(this.dialect.CommitStampStart, start);
+                query.AddParameter(this.dialect.CommitStampEnd, end);
+                return query.ExecuteWithQuery(statement);
+            });
+
+            var bucket = new Bucket { Timestamp = DateTime.MinValue, Commits = new List<Commit>() };
+
+            foreach (var record in records)
+                foreach (var commit in Remap(record, bucket))
+                    yield return commit;
 		}
 
 		public virtual void Commit(Commit attempt)
@@ -175,10 +208,9 @@ namespace EventStore.Persistence.SqlPersistence
 		public virtual IEnumerable<Commit> GetUndispatchedCommits()
 		{
 			Logger.Debug(Messages.GettingUndispatchedCommits);
-			return this.ExecuteQuery(Guid.Empty, query =>
-				query.ExecutePagedQuery(this.dialect.GetUndispatchedCommits, (q, r) => { }))
-					.Select(x => x.GetCommit(this.serializer))
-					.ToArray(); // avoid paging
+
+            return this.ExecuteQuery(Guid.Empty, query => query.ExecuteWithQuery(this.dialect.GetUndispatchedCommits))
+                .Select(x => x.GetCommit(this.serializer));
 		}
 		public virtual void MarkCommitAsDispatched(Commit commit)
 		{
@@ -196,13 +228,11 @@ namespace EventStore.Persistence.SqlPersistence
 			Logger.Debug(Messages.GettingStreamsToSnapshot);
 			return this.ExecuteQuery(Guid.Empty, query =>
 			{
-				var statement = this.dialect.GetStreamsRequiringSnapshots;
 				query.AddParameter(this.dialect.StreamId, Guid.Empty);
 				query.AddParameter(this.dialect.Threshold, maxThreshold);
-				return query.ExecutePagedQuery(statement,
-						(q, s) => q.SetParameter(this.dialect.StreamId, this.dialect.CoalesceParameterValue(s.StreamId())))
-					.Select(x => x.GetStreamToSnapshot());
-			});
+
+                return query.ExecuteWithQuery(this.dialect.GetStreamsRequiringSnapshots);
+            }).Select(x => x.GetStreamToSnapshot());
 		}
 		public virtual Snapshot GetSnapshot(Guid streamId, int maxRevision)
 		{
