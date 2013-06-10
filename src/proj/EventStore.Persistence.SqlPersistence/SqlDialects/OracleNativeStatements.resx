@@ -165,6 +165,14 @@ WHERE StreamId = :StreamId
    --AND CommitSequence &gt; (:CommitSequence - :CommitSequence)
 ORDER BY CommitSequence</value>
   </data>
+  <data name="GetCommitsFromToInstant" xml:space="preserve">
+    <value>/*GetCommitsFromToInstant*/
+SELECT StreamId, StreamRevision, CommitId, CommitSequence, CommitStamp, Headers, Payload
+FROM Commits 
+WHERE CommitStamp &gt;= :CommitStampStart
+AND CommitStamp &lt; :CommitStampEnd
+ORDER BY CommitStamp</value>
+  </data>
   <data name="GetSnapshot" xml:space="preserve">
     <value>/*GetSnapshot*/
 SELECT *

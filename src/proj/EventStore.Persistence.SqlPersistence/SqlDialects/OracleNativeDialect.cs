@@ -31,6 +31,14 @@ namespace EventStore.Persistence.SqlPersistence.SqlDialects
         {
             get { return OracleNativeStatements.GetSnapshot; }
         }
+        public override string GetCommitsFromInstant
+        {
+            get { return OracleNativeStatements.GetCommitsFromInstant; }
+        }
+        public override string GetCommitsFromToInstant
+        {
+            get { return OracleNativeStatements.GetCommitsFromToInstant; }
+        }
         public override string GetCommitsFromStartingRevision
         {
             get { return AddOuterTrailingCommitSequence(LimitedQuery(OracleNativeStatements.GetCommitsFromStartingRevision)); }
