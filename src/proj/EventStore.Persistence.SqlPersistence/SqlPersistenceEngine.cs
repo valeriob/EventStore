@@ -104,35 +104,8 @@ namespace EventStore.Persistence.SqlPersistence
                 return query.ExecuteWithQuery(statement);
             });
 
-            var bucket = new Bucket { Timestamp = DateTime.MinValue, Commits = new List<Commit>() };
-
             foreach (var record in records)
-                foreach (var commit in Remap(record, bucket))
-                    yield return commit;
-
-            foreach (var commit in bucket.Commits)
-                yield return commit;
-        }
-        class Bucket
-        {
-            public DateTime Timestamp { get; set; }
-            public List<Commit> Commits { get; set; }
-        }
-        IEnumerable<Commit> Remap(IDataRecord reader, Bucket state)
-        {
-            var bucket = state.Commits;
-            var currentCommit = reader.GetCommit(serializer);
-
-            if (state.Timestamp != currentCommit.CommitStamp)
-            {
-                var commits = bucket.OrderBy(o => o.StreamId).ThenBy(o => o.StreamRevision);
-                foreach (var commit in commits)
-                    yield return commit;
-
-                bucket.Clear();
-                state.Timestamp = currentCommit.CommitStamp;
-                bucket.Add(currentCommit);
-            }
+                yield return record.GetCommit(this.serializer);
         }
 
 		public virtual IEnumerable<Commit> GetFromTo(DateTime start, DateTime end)
@@ -149,14 +122,8 @@ namespace EventStore.Persistence.SqlPersistence
                 return query.ExecuteWithQuery(statement);
             });
 
-            var bucket = new Bucket { Timestamp = DateTime.MinValue, Commits = new List<Commit>() };
-
             foreach (var record in records)
-                foreach (var commit in Remap(record, bucket))
-                    yield return commit;
-
-            foreach (var commit in bucket.Commits)
-                yield return commit;
+                yield return record.GetCommit(this.serializer);
 		}
 
 		public virtual void Commit(Commit attempt)
